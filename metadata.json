@@ -1,0 +1,8 @@
+{
+  "name": "PsyReports Pro Desktop",
+  "description": "نظام إدارة العيادات النفسية والتقارير الذكية المدعوم بالذكاء الاصطناعي.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

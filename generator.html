@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyReports Pro | Device Lock Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Tajawal', 'sans-serif'] },
+                    colors: {
+                        slate: { 850: '#151e2e', 900: '#0f172a', 950: '#020617' }
+                    }
+                }
+            }
+        }
+
+        // Error Handler preventing black screen
+        window.onerror = function(msg, url, line, col, error) {
+            document.body.innerHTML = `
+                <div style="background:#0f172a; color:white; height:100vh; padding:40px; font-family:sans-serif; direction:ltr;">
+                    <h1 style="color:#ef4444; font-size:24px; margin-bottom:20px;">Generator Error</h1>
+                    <p style="font-size:16px;">${msg}</p>
+                    <pre style="background:#1e293b; padding:20px; border-radius:10px; margin-top:20px; overflow:auto; color:#94a3b8;">${error?.stack || ''}</pre>
+                    <button onclick="window.location.reload()" style="margin-top:20px; padding:10px 20px; background:#3b82f6; border:none; border-radius:5px; color:white; cursor:pointer;">Reload</button>
+                </div>
+            `;
+            return false;
+        };
+    </script>
+    <style>
+        body { background-color: #020617; color: #e2e8f0; }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-field {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 selection:bg-blue-500 selection:text-white">
+    <div id="root" class="w-full max-w-lg">
+        <div class="text-center p-10 text-slate-500 animate-pulse">Loading Generator...</div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // Safe Icon Component
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const lucide = window.lucide;
+            if (!lucide || !lucide.icons[name]) return <span className="text-xs">{name}</span>;
+            
+            // Create a temporary container to render the SVG string from Lucide
+            // This is a workaround for using Lucide vanilla in React without the react-library
+            // Ideally we use lucide-react but for single file html this is safer
+            return (
+                <i data-lucide={name} width={size} height={size} className={className}></i>
+            );
+        };
+
+        // Generator Logic
+        const generateUniversalCode = (credits, salt, targetDeviceId) => {
+            const randomId = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const cleanDevice = targetDeviceId.trim().toUpperCase();
+            const payload = `${credits}:${salt}:${cleanDevice}:${randomId}`;
+            return btoa(payload).replace(/=/g, ''); 
+        };
+
+        const GeneratorApp = () => {
+            const [salt, setSalt] = useState("PSY_PRO_SECRET_2024");
+            const [targetDeviceId, setTargetDeviceId] = useState("");
+            const [credits, setCredits] = useState("10");
+            const [generatedCode, setGeneratedCode] = useState("");
+            const [copied, setCopied] = useState(false);
+
+            // Re-run lucide icon replacement when UI updates
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            });
+
+            const handleGenerate = () => {
+                if (!targetDeviceId.trim()) {
+                    alert("يجب إدخال رقم جهاز العميل (Device ID) أولاً!");
+                    return;
+                }
+                const code = generateUniversalCode(credits, salt, targetDeviceId);
+                setGeneratedCode(code);
+                setCopied(false);
+            };
+
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText(generatedCode);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
+
+            const creditOptions = [
+                { value: '10', label: '10 تقارير' },
+                { value: '20', label: '20 تقرير' },
+                { value: '50', label: '50 تقرير' },
+                { value: '100', label: '100 تقرير' },
+                { value: '200', label: '200 تقرير' },
+                { value: 'INF', label: 'باقة غير محدودة (INF)' },
+            ];
+
+            return (
+                <div className="glass-panel rounded-[2.5rem] overflow-hidden animate-in zoom-in duration-500">
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-center relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIvPjwvc3ZnPg==')] opacity-30"></div>
+                        <div className="relative z-10 flex flex-col items-center">
+                            <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/20 mb-4 shadow-xl">
+                                <Icon name="shield-check" size={32} className="text-white" />
+                            </div>
+                            <h1 className="text-2xl font-black text-white tracking-tight">مولد التراخيص الآمن</h1>
+                            <p className="text-blue-100 text-xs font-bold uppercase tracking-[0.2em] mt-1">PsyReports Pro | Device Lock</p>
+                        </div>
+                    </div>
+
+                    <div className="p-8 space-y-6">
+                        {/* Device ID Input - CRITICAL */}
+                        <div className="space-y-3">
+                            <label className="flex items-center gap-2 text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+                                <Icon name="smartphone" size={14} /> رقم جهاز العميل (Target Device ID)
+                            </label>
+                            <input 
+                                type="text" 
+                                value={targetDeviceId}
+                                onChange={(e) => setTargetDeviceId(e.target.value)}
+                                placeholder="انسخ الرقم من برنامج العميل هنا..."
+                                className="input-field w-full p-4 rounded-2xl font-mono text-sm font-black text-center tracking-wider text-white border-emerald-500/30 focus:border-emerald-500"
+                            />
+                        </div>
+
+                        {/* Salt Input */}
+                        <div className="space-y-3">
+                            <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                <Icon name="key" size={14} /> مفتاح التشفير (Salt)
+                            </label>
+                            <input 
+                                type="text" 
+                                value={salt}
+                                onChange={(e) => setSalt(e.target.value)}
+                                className="input-field w-full p-4 rounded-2xl font-mono text-sm font-bold text-center tracking-wider text-blue-400"
+                            />
+                        </div>
+
+                        {/* Credits Selection */}
+                        <div className="space-y-3">
+                            <label className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                <Icon name="package" size={14} /> حدد الباقة
+                            </label>
+                            <div className="grid grid-cols-2 gap-3">
+                                {creditOptions.map(opt => (
+                                    <button
+                                        key={opt.value}
+                                        onClick={() => setCredits(opt.value)}
+                                        className={`p-4 rounded-xl text-xs font-black transition-all border ${credits === opt.value ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/50' : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:border-slate-700'}`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Generate Button */}
+                        <button 
+                            onClick={handleGenerate}
+                            className="w-full py-5 bg-white text-slate-950 hover:bg-blue-50 rounded-2xl font-black text-sm shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+                        >
+                            <Icon name="cpu" size={18} /> توليد كود محمي
+                        </button>
+
+                        {/* Output Area */}
+                        {generatedCode && (
+                            <div className="space-y-2 animate-in slide-in-from-bottom duration-300">
+                                <div className="p-1 rounded-[1.5rem] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500">
+                                    <div className="bg-slate-950 rounded-[1.3rem] p-6 text-center space-y-4">
+                                        <div className="flex items-center justify-center gap-2 text-emerald-400 mb-2">
+                                            <Icon name="lock" size={14} />
+                                            <p className="text-[10px] font-bold uppercase tracking-widest">محمي لجهاز واحد فقط</p>
+                                        </div>
+                                        <div className="text-3xl font-mono font-black text-white tracking-wider select-all break-all leading-tight">
+                                            {generatedCode}
+                                        </div>
+                                        <button 
+                                            onClick={copyToClipboard}
+                                            className="mx-auto flex items-center gap-2 px-6 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition-colors text-xs font-bold"
+                                        >
+                                            {copied ? <Icon name="check" size={14} className="text-emerald-500" /> : <Icon name="copy" size={14} />}
+                                            {copied ? 'تم النسخ' : 'نسخ للحافظة'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<GeneratorApp />);
+    </script>
+</body>
+</html>

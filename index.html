@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PsyReports Pro Desktop | Premium Clinic Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Babel for in-browser compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        // Polyfill for process.env
+        window.process = {
+            env: {
+                API_KEY: "AIzaSyC4SSa5PkKdZl2f0UWeCCtIHiIQUOuhxi0",
+                NODE_ENV: "development"
+            }
+        };
+
+        // Error Handler to show errors on screen instead of black screen
+        window.onerror = function(msg, url, line, col, error) {
+            const root = document.getElementById('root');
+            if (root) {
+                root.innerHTML = `
+                    <div style="color: #ef4444; padding: 20px; font-family: monospace; direction: ltr; background: #1e1e1e; height: 100vh;">
+                        <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">System Error (الشاشة السوداء)</h2>
+                        <p style="font-size: 14px; margin-bottom: 10px;">${msg}</p>
+                        <p style="color: #94a3b8; font-size: 12px;">Location: ${url}:${line}:${col}</p>
+                        <pre style="margin-top: 20px; color: #cbd5e1; overflow: auto;">${error?.stack || ''}</pre>
+                        <div style="margin-top: 20px; padding: 10px; border: 1px solid #334155; border-radius: 8px;">
+                            <p style="color: #3b82f6; font-weight: bold;">نصيحة للإصلاح:</p>
+                            <p style="color: #94a3b8;">إذا كنت ترى "Unexpected token <" فهذا يعني أنك تفتح الملف مباشرة.</p>
+                            <p style="color: #94a3b8;">يرجى استخدام "Live Server" في VS Code أو أي سيرفر محلي لتشغيل البرنامج.</p>
+                        </div>
+                    </div>
+                `;
+            }
+            return false;
+        };
+
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0f172a',
+                            surface: '#1e293b',
+                            teal: '#14b8a6',
+                            violet: '#6366f1',
+                            accent: '#f59e0b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .dark {
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            scroll-behavior: smooth;
+            background: #f1f5f9;
+            color: #334155;
+            overflow: hidden;
+        }
+        .dark body {
+            background: #020617;
+            color: #e2e8f0;
+        }
+        .glass-widget {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #0d9488 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .neo-gradient { background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%); }
+        .medical-input {
+            background: #ffffff !important;
+            color: #1e293b !important;
+            border: 1px solid #cbd5e1;
+            padding: 0.85rem 1.25rem !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            border-radius: 1rem !important;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .dark .medical-input {
+            background: #1e293b !important;
+            color: #f1f5f9 !important;
+            border-color: #334155;
+            box-shadow: none;
+        }
+        .medical-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; overflow: visible !important; }
+            #root { overflow: visible !important; height: auto !important; }
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-ui { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+
+    <!-- Import Map for React 18 & Dependencies -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/": "https://esm.sh/react@18.2.0/",
+    "react-dom": "https://esm.sh/react-dom@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "recharts": "https://esm.sh/recharts@2.7.2",
+    "@google/genai": "https://esm.sh/@google/genai@0.1.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="transition-colors duration-500 antialiased selection:bg-blue-100 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-100">
+    <div id="root" class="flex items-center justify-center h-screen flex-col gap-4">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <p class="text-slate-500 font-bold animate-pulse">Loading PsyReports Pro...</p>
+    </div>
+
+    <!-- Main Entry Point - Compiled by Babel in Browser -->
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+        import React from 'react';
+        import ReactDOM from 'react-dom/client';
+        
+        // Manual resolution for local files since we are in browser
+        // We import the App component. In a real build step this is automatic.
+        // For this "No-Build" environment, we rely on the browser finding the file.
+        // NOTE: If this fails, ensure you are running on a local server (http://localhost), NOT file://
+        import App from './App.tsx';
+
+        const rootElement = document.getElementById('root');
+        if (!rootElement) {
+            throw new Error("Could not find root element");
+        }
+
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(
+            <React.StrictMode>
+                <App />
+            </React.StrictMode>
+        );
+    </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
