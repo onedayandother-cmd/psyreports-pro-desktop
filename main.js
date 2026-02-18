@@ -12,10 +12,10 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false
     },
+    // حاول تحميل الأيقونة إذا كانت موجودة، وإلا تجاهلها لتجنب الأخطاء
     icon: path.join(__dirname, 'public/favicon.ico') 
   });
 
-  // في حالة التطوير نستخدم الرابط، وفي حالة البناء نستخدم الملف
   if (app.isPackaged) {
     win.loadFile(path.join(__dirname, 'dist/index.html'));
   } else {
@@ -27,8 +27,4 @@ app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
