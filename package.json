@@ -1,24 +1,43 @@
 {
-  "name": "psyreports-pro-desktop",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "18.2.0",
-    "react-dom": "^19.2.4",
-    "lucide-react": "0.263.1",
-    "recharts": "2.7.2",
-    "@google/genai": "0.1.1"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  }
+"name": "psyreports-pro-desktop",
+"private": true,
+"version": "1.0.0",
+"type": "module",
+"main": "main.js",
+"scripts": {
+"dev": "vite",
+"build": "vite build",
+"preview": "vite preview",
+"electron:build": "vite build && electron-builder"
+},
+"dependencies": {
+"react": "18.2.0",
+"react-dom": "18.2.0",
+"lucide-react": "0.263.1",
+"recharts": "2.7.2",
+"@google/genai": "0.1.1"
+},
+"devDependencies": {
+"@types/node": "^22.14.0",
+"@vitejs/plugin-react": "^5.0.0",
+"typescript": "~5.8.2",
+"vite": "^6.2.0",
+"electron": "^28.2.0",
+"electron-builder": "^24.9.1"
+},
+"build": {
+"appId": "com.psyreports.pro",
+"productName": "PsyReports Pro",
+"directories": {
+"output": "dist_electron"
+},
+"files": [
+"dist/**/*",
+"main.js",
+"package.json"
+],
+"win": {
+"target": "nsis"
+}
+}
 }
