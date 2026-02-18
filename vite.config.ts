@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      base: './', // هذا السطر هو الإضافة الوحيدة والضرورية لعمل الـ EXE
       server: {
         port: 3000,
         host: '0.0.0.0',
