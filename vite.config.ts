@@ -3,19 +3,14 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 
 export default defineConfig(({ mode }) => {
-  // تحميل متغيرات البيئة بشكل آمن
   const env = loadEnv(mode, process.cwd(), '');
-  
   return {
-    base: './', // ضروري جداً لنسخة سطح المكتب
+    base: './', // ضروري جداً لعمل البرنامج كملف EXE
     plugins: [react()],
     resolve: {
       alias: {
-        '@': path.resolve(process.cwd(), './src'), // تم إصلاح المسار ليعمل بشكل صحيح
+        '@': path.resolve(process.cwd(), './src'),
       },
-    },
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || ''),
     },
     build: {
       outDir: 'dist',
