@@ -1,33 +1,25 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
-
-// هذا الكود ضروري لتعريف __dirname لأننا نستخدم Modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import path from 'path';
 
 export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, process.cwd(), '');
-    return {
-      base: './', // ضروري لملف الـ EXE
-      server: {
-        port: 3000,
-        host: '0.0.0.0',
+  // تحميل متغيرات البيئة بشكل آمن
+  const env = loadEnv(mode, process.cwd(), '');
+  
+  return {
+    base: './', // ضروري جداً لنسخة سطح المكتب
+    plugins: [react()],
+    resolve: {
+      alias: {
+        '@': path.resolve(process.cwd(), './src'), // تم إصلاح المسار ليعمل بشكل صحيح
       },
-      plugins: [react()],
-      define: {
-        'process.env.API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-        'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY)
-      },
-      resolve: {
-        alias: {
-          '@': path.resolve(__dirname, '.'),
-        }
-      },
-      build: {
-        outDir: 'dist',
-        emptyOutDir: true,
-      }
-    };
+    },
+    define: {
+      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || ''),
+    },
+    build: {
+      outDir: 'dist',
+      emptyOutDir: true,
+    }
+  };
 });
